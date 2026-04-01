@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEBEST BRAIN - Educational Quiz Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@400;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="artcurator.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 DEBEST BRAIN 🎯</h1>
+        <p class="subtitle">The Ultimate Educational Quiz Challenge!</p>
+        
+        <div class="game-container">
+            <div class="left-panel">
+                <!-- Network Lobby -->
+                <div id="networkPanel" class="setup-panel">
+                    <h2>🌐 Multiplayer Lobby</h2>
+                    <div class="input-group">
+                        <label>Room Code:</label>
+                        <input type="text" id="roomCodeInput" placeholder="e.g. ABCD1234" maxlength="12">
+                    </div>
+                    <div class="input-group">
+                        <label>Your Name:</label>
+                        <input type="text" id="playerNameInput" placeholder="Enter your name" maxlength="20">
+                    </div>
+                    <div class="control-buttons">
+                        <button class="btn-primary" onclick="createRoom()">Create Room</button>
+                        <button class="btn-success" onclick="joinRoom()">Join Room</button>
+                    </div>
+                    <p id="lobbyStatus" style="margin-top:10px;color:#333;font-weight:bold;">Disconnected</p>
+                </div>
+
+                <!-- Setup Panel -->
+                <div id="setupPanel" class="setup-panel">
+                    <h2>🏆 Game Setup</h2>
+                    <div class="input-group">
+                        <label>Difficulty Level:</label>
+                        <select id="difficulty">
+                            <option value="easy">🟢 Easy</option>
+                            <option value="intermediate">🟡 Intermediate</option>
+                            <option value="hard">🟠 Hard</option>
+                            <option value="exceptional">🔴 Exceptional</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Game Time per Question (seconds):</label>
+                        <input type="number" id="timeLimit" value="15" min="10" max="30">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Number of Players (1-8):</label>
+                        <input type="number" id="numPlayers" value="1" min="1" max="8">
+                        <button class="btn-primary" onclick="updatePlayerInputs()">Update Players</button>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Player Names:</label>
+                        <div id="playerInputs" class="player-inputs">
+                            <div class="player-row">
+                                <input type="text" placeholder="Player 1" maxlength="15">
+                            </div>
+                        </div>
+                        <button class="btn-primary" onclick="addPlayer()">+ Add Player</button>
+                    </div>
+                    
+                    <button class="btn-success" onclick="requestStartGame()" style="width: 100%; margin-top: 20px;">🚀 START GAME</button>
+                </div>
+
+                <!-- Waiting Panel for Non-Host Players -->
+                <div id="waitingPanel" class="setup-panel" style="display: none;">
+                    <h2>⏳ Waiting for Host</h2>
+                    <p>The game host is setting up the quiz. Please wait for the game to start...</p>
+                    <div class="players-list" id="waitingPlayersList"></div>
+                </div>
+
+                <!-- Game Panel -->
+                <div id="gamePanel" class="game-panel">
+                    <div class="question-display">
+                        <div class="question-number" id="questionNumber"></div>
+                        <div class="question-text" id="questionText"></div>
+                        <div class="timer" id="timer">15</div>
+                    </div>
+                    
+                    <div class="options" id="options"></div>
+                    
+                    <div class="control-buttons">
+                        <button class="btn-warning" onclick="nextQuestion()">⏭️ Next Question</button>
+                        <button class="btn-primary" onclick="showResults()">🏁 End Game</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="players-panel">
+                    <h3>👥 Players</h3>
+                    <div class="players-list" id="playersList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Panel -->
+        <div id="resultsPanel" class="game-panel" style="display: none;">
+            <div class="results">
+                <h2>🏆 FINAL RESULTS 🏆</h2>
+                <div id="finalScores" class="final-scores"></div>
+                <div class="control-buttons">
+                    <button class="btn-primary" onclick="restartGame()" style="width: 100%;">🔄 New Game</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="artcurator.js" defer></script>
